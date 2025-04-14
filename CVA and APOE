@@ -1,0 +1,39 @@
+import matplotlib
+matplotlib.use('Agg')
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+# Load coefficient data (assumes coefficients_data.csv in same directory)
+df = pd.read_csv('coefficients_data.csv')
+
+# Pivot data for heatmaps
+lasso_pivot = df.pivot(index='CVA Type', columns='Predictor', values='Lasso Coef')
+ridge_pivot = df.pivot(index='CVA Type', columns='Predictor', values='Ridge Coef')
+
+# Set up figure with two panels
+plt.figure(figsize=(18, 8))
+
+# Lasso Heatmap
+plt.subplot(1, 2, 1)
+sns.heatmap(lasso_pivot, annot=True, fmt='.2f', cmap='viridis', 
+            center=0, cbar_kws={'label': 'Lasso Coefficient'},
+            linewidths=0.5, linecolor='gray')
+plt.title('Lasso Coefficients')
+plt.xlabel('Predictor')
+plt.ylabel('CVA Type')
+
+# Ridge Heatmap
+plt.subplot(1, 2, 2)
+sns.heatmap(ridge_pivot, annot=True, fmt='.2f', cmap='viridis', 
+            center=0, cbar_kws={'label': 'Ridge Coefficient'},
+            linewidths=0.5, linecolor='gray')
+plt.title('Ridge Coefficients')
+plt.xlabel('Predictor')
+plt.ylabel('CVA Type')
+
+# Layout and save
+plt.tight_layout()
+plt.savefig('coefficients_heatmap.png', dpi=300, bbox_inches='tight')
+plt.close()
